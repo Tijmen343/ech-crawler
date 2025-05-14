@@ -3,7 +3,7 @@ name: Crawl ECH
 on:
   schedule:
     # elke dag 04:00 NL-tijd (02:00 UTC).
-    - cron: '0 2 * * *'
+    - cron: '0 2 * * 1'
   workflow_dispatch:      # handmatig starten via GitHub-UI
 
 jobs:
