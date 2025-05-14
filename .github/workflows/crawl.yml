@@ -1,4 +1,6 @@
 name: Crawl ECH
+permissions:
+  contents: write
 
 on:
   schedule:
