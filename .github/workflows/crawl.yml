@@ -1,0 +1,35 @@
+name: Crawl ECH
+
+on:
+  schedule:
+    # elke dag 04:00 NL-tijd (02:00 UTC).
+    - cron: '0 2 * * *'
+  workflow_dispatch:      # handmatig starten via GitHub-UI
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run crawler
+        run: python crawl_ech.py
+
+      # commit nieuwe of gewijzigde JSON-bestanden
+      - name: Commit & push if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/*.json || true
+          timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          git commit -m "auto-crawl $timestamp" || echo "No changes"
+          git push
